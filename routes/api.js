@@ -1,18 +1,15 @@
 const router = require("express").Router();
-router.get("/", (req, res) => {
-    console.log("hello");
-    res.json("world");
-})
+const Workout = require("../models/workout.js");
+const { route } = require("./htmlRoutes.js");
 
-router.get("/api/workouts", (req, res) => {
-    Workout.find({})
-        .sort({ date: -1 })
-        .then(dbWorkout => {
-            res.json(dbWorkout);
+router.post("/api/workouts", (req, res) => {
+    Workout.create({})
+        .then((workout) => {
+            res.json(workout)
         })
-        .catch(err => {
-            res.status(400).json(err);
-        });
+        .catch((err) => {
+            res.json(err)
+        })
 });
 
 
