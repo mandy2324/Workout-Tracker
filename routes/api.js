@@ -28,6 +28,36 @@ router.get("/api/workouts", (req, res) => {
         })
 });
 
+router.put("/api/workouts/:id", (req, res) => {
+    console.log('PARAMS', req.params)
+    Workout.findByIdAndUpdate(
+            req.params.id, { $push: { exercise: req.body } }, { new: true, runValidators: true }
+        )
+        .then((workout) => {
+            res.json(workout)
+        })
+        .catch((e) => {
+            res.json(e)
+        })
+});
+router.get(`/api/workouts/range`, (req, res) => {
+    Workout.aggregate([{
+            $addFields: {
+                totalDuration: { $sum: '$exercise.duration' },
+                totalWeight: { $sum: '$exercises.weight' }
+            }
+        }])
+        .limit(10)
+        .then((workout) => {
+            console.log('YOO', workout);
+            res.json(workout)
+        })
+        .catch((e) => {
+            res.json(e)
+        })
+});
+
+
 
 
 
