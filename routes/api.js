@@ -11,7 +11,22 @@ router.post("/api/workouts", (req, res) => {
             res.json(err)
         })
 });
-
+router.get("/api/workouts", (req, res) => {
+    Workout.aggregate([{
+            $addFields: {
+                totalDuration: {
+                    $sum: '$exercise.duration'
+                },
+            },
+        }, ])
+        .then((workout) => {
+            console.log('YOO', workout);
+            res.json(workout)
+        })
+        .catch((e) => {
+            res.json(e)
+        })
+});
 
 
 
